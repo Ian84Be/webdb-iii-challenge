@@ -52,4 +52,41 @@ router.get('/:id/students', async (req,res) => {
     }
 });
 
+router.put('/:id', async (req,res) => {
+    const {id} = req.params;
+    if (!req.body.name) {
+        res.status(400).json({error:'missing required field: name'});
+    } else {
+        try {
+            const cohort = await
+            db('cohorts').where({id}).update(req.body);
+            if (cohort) {
+                const result = await db('cohorts').where({id}).first();
+                res.status(200).json(result);
+            }
+            else {
+                res.status(404).json({ error: 'Record not found' });
+            }
+        }
+        catch(err) {
+            res.status(500).json(err);
+        }
+    }
+});
+
+router.delete('/:id', async (req,res) => {
+    const {id} = req.params;
+    try {
+        const cohort = await db('cohorts').where({id}).del();
+        if (cohort) {
+            res.status(200).json({success: 'Record deleted'});
+        } else {
+            res.status(404).json({ error: 'Record not found' });
+        }
+    }
+    catch(err) {
+        res.status(500).json(err);
+    }
+});
+
 module.exports = router;
