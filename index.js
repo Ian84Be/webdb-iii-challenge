@@ -1,6 +1,5 @@
 const express = require('express');
 const helmet = require('helmet');
-const knex = require('knex');
 
 const server = express();
 server.use(helmet());
